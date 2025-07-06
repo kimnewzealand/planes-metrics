@@ -26,9 +26,11 @@ Core:
 
 I then created a profiles.yml using `dbt init` to connect dbt-core to the trial account.
 
-I finally installed sqlfluff to lint the sql using `pip install sqlfluff-templater-dbt`
+### Code Linting
 
-**Note:** these Python package versions could be added to a requirements.txt if the repo was to be used by multiple engineers in practice.
+To automate code quality and readability, I installed sqlfluff using `pip install sqlfluff-templater-dbt` to lint the sql using the default [sqlfluff dbt templater](https://docs.sqlfluff.com/en/stable/configuration/templating/dbt.html) rules.
+
+**Note:** If the repo was to be used by multiple engineers in a team and in a production pipeline, these Python packages could be added to a requirements.txt or a Docker image.
 
 
 ## Data Exploration
@@ -37,19 +39,22 @@ With set up successful, I explored the data provided.
 
 ## Data Modeling
 
-I set up the folder structure as per [https://docs.getdbt.com/best-practices](dbt best practices) but structure and naming conventions also depend on  patterns decided by the team.
+I set up the initial folder structure as per some [dbt best practices](https://docs.getdbt.com/best-practices). In practice the structure and naming conventions would also depend on patterns agreed up front by the team.
 
-## Data Testing
-
-We could add dbt generic tests (https://docs.getdbt.com/docs/build/data-tests) to test for data validity and quality of the source data.
-
-- not nulls to ensure that the data is complete
-
-We could add other dbt or even leverage the great expectations package ( https://github.com/calogica/dbt-expectations/tree/0.10.3/) for shape, values, types, range, summary statistics etc depending on further discussions and requirements.
-
-## Open Questions
 
 ## Assumptions
 
-- Data governance and data classification should be considered in a data pipeline production context but out of scope of this exercise.
+## Other Considerations
+
+ The scope and output of this exercise has been limited given the time constraints and the expectation that the code is not to be production ready. The following requirements would normally be considered and discussed for production pipelines: 
+
+- Data governance
+- Data classification
+- Data testing:
+
+ Leverage dbt packages to test at a column for example [dbt tests](https://docs.getdbt.com/docs/build/data-tests) and the [great expectations package]( https://github.com/calogica/dbt-expectations/tree/0.10.3/),  unit test sql models using [dbt unit tests](https://docs.getdbt.com/docs/build/unit-tests) or write customised data tests.
+
+ - dbt macros and macro unit tests where necessary
+ - Automated pipeline scheduling
+ - Pipeline monitoring tools
 

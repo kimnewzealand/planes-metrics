@@ -2,7 +2,6 @@ SELECT
     YEAR,
     MONTH,
     DAY,
-    DATE_FROM_PARTS(YEAR,MONTH,DAY) as DEP_DATE,
     DEP_TIME,
     SCHED_DEP_TIME,
     DEP_DELAY,
@@ -21,5 +20,6 @@ SELECT
     TIME_HOUR,
     AIRLINE,
     CALLSIGN,
-    PRIMARY_HUB
+    PRIMARY_HUB,
+    DATE_FROM_PARTS(YEAR, MONTH, DAY) AS DEP_DATE
 FROM {{ source('sky', 'flights') }}
