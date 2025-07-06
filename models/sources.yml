@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: sky
+    database: SKY_TEST
+    schema: PUBLIC
+    tables:
+      - name: airports
+      - name: flights
+      - name: weather
+      - name: planes
