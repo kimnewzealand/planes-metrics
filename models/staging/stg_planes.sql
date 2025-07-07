@@ -1,11 +1,11 @@
-SELECT
-    TAILNUM,
-    YEAR,
-    TYPE,
-    MANUFACTURER,
-    MODEL,
-    ENGINES,
-    SEATS,
-    SPEED,
-    ENGINE
-FROM {{ source('sky', 'planes') }}
+select
+    tailnum as tailnum_id,
+    year,
+    type,
+    manufacturer,
+    model,
+    engines,
+    seats,
+    speed,
+    engine
+from {{ source('sky', 'planes') }}

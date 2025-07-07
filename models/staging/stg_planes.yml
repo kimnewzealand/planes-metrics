@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: stg_planes
+    columns:
+      - name: tailnum_id
+        data_tests:
+          - unique

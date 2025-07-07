@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: stg_weather
+    data_tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - weather_date_time
+          - origin

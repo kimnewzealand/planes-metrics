@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: stg_flights
+    data_tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - SCHED_DEP_DATE_TIME
+          - FLIGHT
+          - CARRIER
