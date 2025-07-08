@@ -1,71 +1,104 @@
-# Summary 
+# 📦 Setup Guide
 
-The goal is to solve the business problem:
+Welcome to the **`planes-metrics`** dbt project! This guide helps you set up, run, and contribute to the analytics codebase with ease.
 
-"Client wants a flights data mart designed and deployed on Snowflake to support downstream reporting on flights occurred."
+---
 
-I made assumptions given the time and available information constraints. In a real business project I would work with the team to validate any assumptions, and requirements with stakeholders and users prior to building the models.
+## 🚀 Project Overview
 
-See below a summary of the steps I took with proposed solutions.
+This dbt project transforms raw data into analytics-ready models using a modular approach: **staging → intermediate → marts**. It's optimized for use with **Snowflake** and supports linting with **sqlfluff**, testing with **dbt-utils**, and automation via **CI/CD pipelines**.
 
-## Setup
+---
 
-I have only used dbt-core so I decided to use this package over trialing dbt cloud for the data transformation steps.
+## 🛠️ Prerequisites
 
-I had recently upgraded to Python 3.13 on my personal laptop but I needed to install 3.12 for compatibility with dbt-core versions.
-[What version of Python can I use?](https://docs.getdbt.com/faqs/Core/install-python-compatibility)
+Make sure you have the following installed:
 
-After creating a Snowflake trial account and loading in the provided csvs, I installed the dbt-core snowflake adapter with ` python -m pip install dbt-core dbt-snowflake` 
+- Python 3.8+
+- Snowflake account & credentials
+- Git + GitHub access
+
+---
+
+## 📁 Project Structure
 
 ```
-$ dbt --version
-Core:
-  - installed: 1.10.3
-  - latest:    1.10.3 - Up to date!
+.
+├── dbt_project.yml
+├── models/
+│   ├── staging/
+│   ├── intermediate/
+│   └── marts/
+├── seeds/
+├── macros/
+├── tests/
+├── .sqlfluff
+└── requirements.txt
 ```
 
-I then created a profiles.yml using `dbt init` to connect dbt-core to the trial account.
+## Installation
 
-I set up the initial folder structure as per [dbt best practices](https://docs.getdbt.com/best-practices). In practice the structure and naming conventions would also depend on patterns agreed up front by the team.
+1. Clone the repo
 
-### Code Linting
+```
+git clone https://github.com/kimnewzealand/planes-metrics.git
+cd planes-metrics
+```
 
-To automate code quality and readability, I installed sqlfluff using `pip install sqlfluff-templater-dbt` to lint the sql using the default [sqlfluff dbt templater](https://docs.sqlfluff.com/en/stable/configuration/templating/dbt.html) rules.
+2. Set up Python environment
+```
+python -m venv env
+source env/bin/activate   # On Windows use: env\Scripts\activate
+pip install -r requirements.txt
+```
 
-**Note:** If the repo was to be used by multiple engineers in a team and in a production pipeline, these Python packages could be added to a requirements.txt or a Docker image.
+3. Configure your dbt profile
 
+Update your ~/.dbt/profiles.yml:
 
-## Data Exploration
+```
+your_project_name:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: <account_id>
+      user: <username>
+      password: <password>
+      role: <role>
+      database: <database>
+      warehouse: <warehouse>
+      schema: <schema>
+      threads: 4
+      client_session_keep_alive: False
+```
 
-With set up successful, I explored the data provided to identify the grain and keys for each source to model the data.
+✅ Common dbt Commands
 
-See ./data_modeling/data_exploration.py
+Run a model
 
-## Data Modeling
+```
+dbt run --select your_model_name
+```
 
-See physical data model using https://dbdiagram.io/d
+Run all tests
 
-<img src='./data_modeling/physical_data_model_dbdiagramio.png'>
+```
+dbt test
+```
 
-Based on the information provided I have created big wide tables.
-The benefits are that these tables could be used for for downstream reporting users who potentially want ready joined data that can be aggregated in the mart as required to load into and be performant in BI tooling.
+Generate & view docs
 
-On inspection of the intermediate models there appears to be some issues:
-- missing destination faa_id's from the airports dataset
-- missing planes metadata from the planes dataset
-- missing weather data, the weather_id key may not be correct yet. See failing unique_combination_of_columns in stg_weather.yml test
+```
+dbt docs generate
+dbt docs serve
+```
 
-## Other Considerations
+🧼 Code Quality & Style
 
- The scope and output of this exercise has been limited given the time constraints and the expectation that the code is not to be production ready.
- 
- The following requirements could be considered and discussed to productionise this code as a data product: 
+SQLFluff Linting
 
-- Data governance
-- Data classification
-- Data testing:
- Leverage dbt packages to test further at a column for example [dbt tests](https://docs.getdbt.com/docs/build/data-tests) and the [great expectations package]( https://github.com/calogica/dbt-expectations/tree/0.10.3/),  unit test sql models using [dbt unit tests](https://docs.getdbt.com/docs/build/unit-tests) or to write customised data tests.
-
- - Automated pipeline scheduling
- - Pipeline monitoring tools
-
+```
+sqlfluff lint 
+sqlfluff fix
+```
